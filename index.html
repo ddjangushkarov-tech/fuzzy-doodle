@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Целина: дело о населении</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌾%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=Russo+One&display=swap">
+<style>
+:root{--sky:#dce8f2;--ink:#17261e;--field:#23402f;--gold:#e0a912;--paper:#fff;--line:#b9c9d6;--mut:#4d5f56;--ok:#1f7a4a;--okbg:#d8f0e0;--no:#b23a2e;--nobg:#f9dcd7}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--sky);color:var(--ink);font:20px/1.5 Rubik,system-ui,sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+header{background:var(--field);color:#fff;padding:22px 16px 0}
+.w{max-width:1100px;margin:0 auto}
+h1,h2{font-family:"Russo One",Impact,sans-serif;font-weight:400;line-height:1.15;margin:0}
+h1{font-size:clamp(1.8rem,4.5vw,2.8rem)}
+h2{font-size:1.45rem;margin-bottom:8px}
+.brief{margin:10px 0 0;max-width:860px;opacity:.92;font-size:.95rem}
+.brief b{color:var(--gold)}
+.field{display:flex;align-items:flex-end;gap:2px;margin-top:14px;padding:6px 0 0;border-bottom:6px solid var(--gold);font-size:.85rem}
+.field span.l{margin:0 10px 6px 0;white-space:nowrap}
+.st{font-size:2.1rem;line-height:1;filter:grayscale(1);opacity:.28;transform:scaleY(.55);transform-origin:bottom;transition:transform .5s,opacity .5s,filter .5s}
+.st.on{filter:none;opacity:1;transform:scaleY(1)}
+nav{display:flex;flex-wrap:wrap;gap:8px;padding:16px 16px 0;max-width:1100px;margin:0 auto}
+nav button{flex:1 1 140px;font:500 1rem Rubik,sans-serif;padding:14px 8px;border:2px solid var(--field);border-radius:10px;background:var(--paper);color:var(--field);cursor:pointer}
+nav button[aria-selected=true]{background:var(--field);color:#fff}
+main{max-width:1100px;margin:0 auto;padding:16px 16px 56px}
+.panel{background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:22px}
+.panel[hidden]{display:none}
+button{font-family:inherit}
+button:focus-visible,.slot:focus-visible{outline:4px solid var(--gold);outline-offset:2px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:14px 0}
+.card{background:var(--sky);border:2px solid var(--line);border-radius:10px;padding:12px 14px;font-size:.95rem}
+.card b{display:block;font-size:1.05rem;margin-bottom:4px}
+.crit{display:block;width:100%;text-align:left;font:inherit;font-size:.95rem;padding:10px 14px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);cursor:pointer;margin:0 0 8px}
+.crit.sel{border-color:var(--gold);background:#fff4cf;box-shadow:0 0 0 3px var(--gold)}
+.crit.no{animation:sh .35s;border-color:var(--no);background:var(--nobg)}
+@keyframes sh{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.two{display:grid;grid-template-columns:1fr 1.2fr;gap:18px}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+.bins{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bin{border:3px dashed var(--field);border-radius:12px;padding:10px;min-height:120px;background:var(--sky);cursor:pointer;text-align:left;font:inherit;color:var(--ink)}
+.bin strong{display:block;font-family:"Russo One",sans-serif;font-weight:400;color:var(--field);margin-bottom:6px}
+.bin .it{display:block;font-style:normal;font-size:.82rem;background:var(--okbg);border-radius:6px;padding:4px 8px;margin:4px 0}
+.hint{min-height:1.6em;margin:8px 0;color:var(--mut);font-size:.95rem}
+.seg{display:flex;gap:8px;margin-bottom:14px}
+.seg button,.tool,.pill{font:500 1rem Rubik,sans-serif;border:2px solid var(--field);border-radius:999px;background:var(--paper);color:var(--field);padding:9px 18px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--field);color:#fff}
+.slot{min-height:100px;border:3px dashed var(--line);border-radius:10px;padding:12px;margin:10px 0;font-size:.95rem}
+.slot:empty::before{content:attr(data-ph);color:var(--mut)}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{border:1px solid var(--line);padding:9px;text-align:center}
+th{background:var(--sky)}
+td:first-child{text-align:left}
+.sc{overflow-x:auto}
+.claim{border:2px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.claim p{margin:0 0 8px}
+.claim .ex{margin:8px 0 0;font-size:.9rem;color:var(--mut)}
+.claim.ok{background:var(--okbg);border-color:var(--ok)}
+.claim.no{background:var(--nobg);border-color:var(--no)}
+.sw{display:flex;gap:8px;flex-wrap:wrap}
+.chain{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.chip{flex:1 1 230px;text-align:left;font:inherit;font-size:.95rem;padding:14px;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);cursor:pointer}
+.chip.ok{background:var(--okbg);border-color:var(--ok)}
+.chip.no{animation:sh .35s;background:var(--nobg);border-color:var(--no)}
+.slotn{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:48px;margin:8px 0}
+.slotn span{background:var(--okbg);border:2px solid var(--ok);border-radius:10px;padding:8px 12px;font-size:.9rem}
+.opts{display:grid;gap:8px;margin:6px 0 16px}
+.opt{text-align:left;font:inherit;font-size:.95rem;padding:12px 14px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);cursor:pointer}
+.opt[aria-pressed=true]{border-color:var(--field);background:#e6f0ea;box-shadow:0 0 0 3px var(--field)}
+.verd{font-size:1.05rem;padding:14px;border-radius:12px;border:2px solid var(--line);min-height:60px}
+.verd.ok{background:var(--okbg);border-color:var(--ok)}
+.verd.no{background:var(--nobg);border-color:var(--no)}
+details{margin-top:18px;border:2px solid var(--line);border-radius:12px;padding:10px 14px}
+summary{cursor:pointer;font-weight:700}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="w">
+<h1>Целина: дело о населении</h1>
+<p class="brief"><b>Задача расследования:</b> какое влияние на Казахстан оказала политика освоения целинных и залежных земель? <b>Цель 9.1.1.1:</b> делать аргументированные выводы о демографических изменениях на основе анализа причинно-следственных связей. Выполняйте задания и собирайте колосья.</p>
+<div class="field" aria-live="polite"><span class="l" id="cnt">Колосья: 0 из 6</span><span id="fl"></span></div>
+</div></header>
+<nav id="nav" role="tablist"></nav>
+<main>
+<section class="panel" id="p0"></section><section class="panel" id="p1" hidden></section><section class="panel" id="p2" hidden></section><section class="panel" id="p3" hidden></section><section class="panel" id="p4" hidden></section>
+</main>
+<script>
+var $=function(i){return document.getElementById(i)};
+var TABS=["Досье","Лист критериев","Допрос улик","Цепочка","Вердикт"];
+var R={
+C1:["Атрибуция: автор, время, место","c",["не указаны","указана часть","указаны все, отмечено, что неизвестно"]],
+C2:["Контекст: когда и зачем появился","c",["не учтён","назван общо","связан с содержанием"]],
+C3:["Цель создания и адресат","c",["не определены","определено одно","определены и учтены"]],
+C4:["Достоверность: откуда автор знает, что подтверждает","c",["принято на веру","оценена без доводов","оценена с доводами и проверкой"]],
+C5:["Вывод опирается на детали источника","c",["не связан с источником","опирается частично","опирается на детали"]],
+W1:["Отличает факт от оценки автора","w",["путает","замечает оценку, но не отделяет","отделяет и объясняет"]],
+W2:["Замечает умолчания: о чём автор не сказал","w",["не замечает","отмечает одно","объясняет, почему это важно"]],
+V1:["Различает «что изображено» и «как показано»","v",["пересказывает сюжет","называет сюжет и приёмы","объясняет, как приёмы служат цели"]],
+V2:["Не принимает изображение за «снимок» реальности","v",["принимает за снимок","сомневается без доводов","показывает, что это отбор автора"]],
+S1:["Выясняет, кто и как собирал данные","s",["не спрашивает","называет сборщика","называет сборщика и метод"]],
+S2:["Отличает точный подсчёт от оценки","s",["читает как абсолютно точные","догадывается","отличает с доводом"]],
+S3:["Видит категории и то, что осталось за ними","s",["не замечает категорий","замечает","объясняет, что они не показывают"]]};
+var BN={c:"Общие критерии",w:"Письменный",v:"Визуальный",s:"Статистический"};
+var SRC={
+w:{n:"Письменный: Решение Пленума ЦК КПСС (февраль–март 1954 г.)",m:"Официальный партийный документ об освоении целинных и залежных земель.",slot:"Вставьте фрагмент документа из учебника: скопируйте текст и вставьте сюда.",
+ cl:[["Документ показывает, какие цели ставило руководство страны.",1,"Это жанр документа: он фиксирует задачи и замысел."],["Документ доказывает, что планы были выполнены.",0,"Документ создан до результатов. Выполнение планов проверяют по другим источникам."],["Документ сам по себе показывает, как изменился состав населения Казахстана.",0,"О населении республики в нём нет итоговых данных: нужны переписи."],["Документ отражает официальную позицию государственного органа.",1,"Автор коллективный (ЦК КПСС), поэтому видна официальная точка зрения."]]},
+v:{n:"Визуальный: плакат или фотография эпохи целины",m:"Выберите изображение из учебника, у которого указаны автор и год.",slot:"Вставьте изображение из учебника: скопируйте картинку и вставьте сюда.",
+ cl:[["Агитационный плакат показывает идеальный образ, а не повседневность.",1,"Плакат создан, чтобы убеждать, поэтому он отбирает яркое и героическое."],["Если на изображении все улыбаются, значит, трудностей не было.",0,"Улыбки на кадре или рисунке выбрал автор. Это не доказательство отсутствия трудностей."],["Изображение, созданное спустя десятилетия, показывает, как событие представляют потомки.",1,"Это реконструкция: она свидетельствует о памяти и взгляде позднего автора."],["Фотография без подписи точно показывает жизнь всех переселенцев.",0,"Кадр выбран фотографом, а без подписи неизвестны место, время и автор."]]},
+s:{n:"Статистический: переписи населения Казахской ССР",m:"Всесоюзные переписи 1939, 1959 и 1970 гг. (округлённо; сверьте с учебником).",table:1,
+ cl:[["Население республики выросло с 1939 по 1959 год.",1,"Это прямо видно из таблицы: ≈6,1 млн и ≈9,3 млн."],["Доля казахов в 1959 году была ниже, чем в 1939.",1,"≈38 % в 1939 и 30 % в 1959."],["Все новые жители приехали из-за целины.",0,"Перепись не называет причин. В эти годы были также депортации и эвакуация."],["Перепись показывает, сколько человек были именно переселенцами.",0,"Категория «национальность» не отделяет переселенцев от местных жителей."]]}};
+var COMMON=["C1","C2","C3","C4","C5"],done={},CARDS=Object.keys(R),sorted={},sel=null;
+var ORDER=["Пленум ЦК КПСС принимает курс на освоение целины (1954)","Массовый приток переселенцев в республику","Рост населения: ≈6,1 млн (1939) → ≈9,3 млн (1959)","Меняется состав населения: доля казахов ≈30 % (1959)"];
+var TRAP="Население выросло только из-за высокой рождаемости";
+var SH=[2,4,0,3,1],pick=[];
+function ear(k){if(done[k])return;done[k]=1;var n=Object.keys(done).length;$("cnt").textContent="Колосья: "+n+" из 6"+(n==6?". Дело раскрыто!":"");document.querySelectorAll(".st")[n-1].classList.add("on")}
+function init(){$("fl").innerHTML='<span class="st">🌾</span>'.repeat(6);$("nav").innerHTML=TABS.map(function(t,i){return'<button role="tab" data-t="'+i+'" aria-selected="'+(i==0)+'">'+(i+1)+'. '+t+'</button>'}).join("");
+$("p0").innerHTML='<h2>Досье: три улики</h2><p>Ваша работа — историка, а не очевидца: у вас нет прямого доступа к прошлому, только следы. Прочитайте, что лежит в деле.</p><div class="cards"><div class="card"><b>Улика А. Слово</b>Решение Пленума ЦК КПСС 1954 года. Что власть хотела сделать?</div><div class="card"><b>Улика Б. Образ</b>Плакат или фотография эпохи целины. Что хотели показать зрителю?</div><div class="card"><b>Улика В. Цифры</b>Переписи населения 1939, 1959, 1970. Что действительно изменилось?</div></div><p><b>План работы:</b> 1) составить единый лист критериев; 2) проверить с его помощью каждую улику; 3) выстроить цепочку причин и следствий; 4) вынести обоснованный вердикт. Главный вопрос урока: можно ли по одному источнику ответить на исследовательский вопрос, или нужно сопоставлять?</p><button class="tool" data-go="1">Начать расследование</button>';
+sortUI();srcUI();chainUI();verdUI()}
+function sortUI(){$("p1").innerHTML='<h2>Лист критериев: куда вы поставите вопрос?</h2><p>Нажмите на критерий, затем на «ящик», где его место: общий для всех улик или только для одного типа.</p><div class="two"><div id="cl"></div><div><div class="bins">'+["c","w","v","s"].map(function(b){return'<button class="bin" data-b="'+b+'"><strong>'+BN[b]+'</strong><span id="b'+b+'"></span></button>'}).join("")+'</div></div></div><p class="hint" id="h1">Выберите критерий слева.</p>';drawCl()}
+function drawCl(){$("cl").innerHTML=CARDS.filter(function(k){return!sorted[k]}).map(function(k){return'<button class="crit'+(sel==k?" sel":"")+'" data-c="'+k+'">'+R[k][0]+'</button>'}).join("")}
+function put(b){if(!sel){$("h1").textContent="Сначала выберите критерий слева.";return}
+var r=R[sel][1];if(b==r){sorted[sel]=1;$("b"+b).innerHTML+="<i class=\"it\">"+R[sel][0]+"</i>";$("h1").textContent=r=="c"?"Верно. Этот вопрос можно задать любому источнику.":"Верно. Критерий нужен именно для источника типа «"+BN[r]+"»: у него своя «ловушка».";sel=null;drawCl();
+if(Object.keys(sorted).length==12){ear("sort");$("h1").textContent="Лист готов: 5 общих критериев и 7 специфических. Проверим на уликах."}}
+else{var el=document.querySelector('[data-c="'+sel+'"]');el.classList.add("no");setTimeout(function(){el.classList.remove("no")},400);$("h1").textContent=r=="c"?"Не совсем. Этот вопрос подходит и тексту, и изображению, и таблице.":b=="c"?"Не совсем. Подумайте: это нужно любому источнику или только одному типу?":"Не тот тип. Подумайте, чем отличаются текст, изображение и таблица."}}
+function srcUI(){var k0="w";$("p2").innerHTML='<h2>Допрос улик: можно утверждать или нельзя?</h2><div class="seg" id="sg">'+["w","v","s"].map(function(k,i){return'<button data-sg="'+k+'" aria-pressed="'+(i==0)+'">'+["А. Слово","Б. Образ","В. Цифры"][i]+'</button>'}).join("")+'</div><div id="sv"></div>';drawSrc(k0)}
+var res={w:{},v:{},s:{}};
+function drawSrc(k){var s=SRC[k],h="<h3 style='margin:0 0 6px'>"+s.n+"</h3><p>"+s.m+"</p>";
+h+=s.table?'<div class="sc"><table><tr><th>Перепись</th><th>Население, всего</th><th>Казахи</th><th>Русские</th></tr><tr><td>1939</td><td>≈6,1 млн</td><td>≈38 %</td><td>≈40 %</td></tr><tr><td>1959</td><td>≈9,3 млн</td><td>30 %</td><td>≈43 %</td></tr><tr><td>1970</td><td>≈13,0 млн</td><td>≈33 %</td><td>≈42 %</td></tr></table></div>':'<div class="slot" contenteditable="true" data-ph="'+s.slot+'"></div>';
+h+='<p><b>Решите по каждому утверждению, можно ли его доказать по этой улике.</b></p>';
+s.cl.forEach(function(c,i){var r=res[k][i];h+='<div class="claim'+(r==null?"":r==c[1]?" ok":" no")+'"><p>'+c[0]+'</p><div class="sw"><button class="pill" data-k="'+k+'" data-i="'+i+'" data-a="1">Можно утверждать</button><button class="pill" data-k="'+k+'" data-i="'+i+'" data-a="0">Нельзя</button></div>'+(r==null?"":'<p class="ex">'+(r==c[1]?"Верно. ":"Не совсем. ")+c[2]+"</p>")+"</div>"});
+$("sv").innerHTML=h;$("sv").dataset.k=k}
+function ans(k,i,a){res[k][i]=a;drawSrc(k);var all=SRC[k].cl.every(function(c,j){return res[k][j]==c[1]});if(all)ear(k)}
+function chainUI(){pick=[];var cards=ORDER.concat([TRAP]);$("p3").innerHTML='<h2>Цепочка причин и следствий</h2><p>Нажимайте на карточки по порядку: от причины к следствию. Одна карточка лишняя. Какая?</p><div class="slotn" id="sl"></div><div class="chain">'+SH.map(function(i){return'<button class="chip" data-i="'+i+'">'+cards[i]+"</button>"}).join("")+'</div><p class="hint" id="cf"></p><button class="tool" data-rs="1">Начать заново</button>'}
+function chip(b){var i=+b.dataset.i;if(i==4){b.classList.add("no");$("cf").textContent="Эту карточку лучше не брать. Для такого утверждения таблица не даёт доказательств, ведь на состав населения влияли и другие события.";return}
+if(i==pick.length){pick.push(i);b.disabled=true;b.classList.add("ok");$("sl").innerHTML+=(pick.length>1?"<b>→</b>":"")+"<span>"+ORDER[i]+"</span>";$("cf").textContent=pick.length==4?"Цепочка верна. Вопрос классу: что в ней доказано источниками, а что пока только предположение?":"Верно. А что произошло потом?";if(pick.length==4)ear("chain")}
+else{b.classList.add("no");setTimeout(function(){b.classList.remove("no")},400);$("cf").textContent="Пока не тот шаг. Что произошло раньше?"}}
+var V={a:[["Целина была одним из главных факторов изменения состава населения Казахстана","Утверждение слишком сильное?"],["Целина полностью объясняет изменение состава населения","Слишком сильное утверждение: таблица не исключает другие факторы."]],
+b:[["по переписям население выросло с ≈6,1 млн (1939) до ≈9,3 млн (1959), а доля казахов снизилась с ≈38 % до 30 %","Источник годится: это данные переписей."],["плакат показывает улыбающихся людей, значит, всё было благополучно","Плакат убеждает, а не фиксирует повседневность."]],
+c:[["перепись показывает итог, но не вклад каждой причины: на состав населения влияли и голод 1930-х гг., и депортации, и эвакуация","Вывод честно ограничен."],["ограничений нет, цифры сами всё доказывают","Так нельзя: перепись не называет причин."]]};
+var vp={};
+function verdUI(){var h='<h2>Вердикт: соберите вывод</h2><p>Выберите по одному варианту в каждой строке. Получится предложение, которое можно прочитать классу.</p>';
+[["a","1. Утверждение"],["b","2. Доказательство"],["c","3. Ограничение"]].forEach(function(r){h+="<p><b>"+r[1]+"</b></p><div class='opts'>"+V[r[0]].map(function(o,i){return'<button class="opt" data-v="'+r[0]+'" data-o="'+i+'" aria-pressed="false">'+o[0]+"</button>"}).join("")+"</div>"});
+h+='<div class="verd" id="vd">Выберите по варианту в каждой строке.</div><details><summary>Единый аналитический лист: критерии и дескрипторы</summary><div class="sc"><table><tr><th>Критерий</th><th>Тип</th><th>0</th><th>1</th><th>2</th></tr>'+CARDS.map(function(k){return"<tr><td>"+R[k][0]+"</td><td>"+(k[0]=="C"?"общий":BN[R[k][1]].toLowerCase())+"</td><td>"+R[k][2].join("</td><td>")+"</td></tr>"}).join("")+'</table></div></details><details><summary>Что общего, что специфического?</summary><p>Общими оказались все пять критериев первого блока: любому источнику мы задаём вопросы «кто, когда, зачем, можно ли верить». Специфические критерии показывают, как именно источник формирует картину прошлого: текст словами и позицией автора, изображение выбором кадра, статистика методом и категориями. Ни один из трёх источников не даёт «чистого» прошлого: это всегда чей-то отбор. Поэтому обоснованный вывод строится на сопоставлении источников и честно называет свои границы.</p></details>';$("p4").innerHTML=h}
+function vsel(r,o){vp[r]=o;document.querySelectorAll('[data-v="'+r+'"]').forEach(function(b){b.setAttribute("aria-pressed",b.dataset.o==o)});
+if(vp.a==null||vp.b==null||vp.c==null){$("vd").className="verd";return}
+var good=vp.a==0&&vp.b==0&&vp.c==0,t="";
+if(good){t="Вердикт: "+V.a[0][0]+", потому что "+V.b[0][0]+". Однако "+V.c[0][0]+".";ear("verd")}
+else{["a","b","c"].forEach(function(r){if(vp[r]==1)t+=V[r][1][1]+" "});t="Пока не вердикт. "+t}
+$("vd").textContent=t;$("vd").className="verd "+(good?"ok":"no")}
+init();
+document.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;var d=b.dataset;
+if(d.t!=null){for(var i=0;i<5;i++)$("p"+i).hidden=i!=+d.t;document.querySelectorAll("#nav button").forEach(function(x){x.setAttribute("aria-selected",x.dataset.t==d.t)})}
+else if(d.go){document.querySelector('[data-t="1"]').click()}
+else if(d.c){sel=d.c;$("h1").textContent="Выбрано. Теперь нажмите на нужный ящик справа.";drawCl()}
+else if(d.b)put(d.b);
+else if(d.sg){document.querySelectorAll("#sg button").forEach(function(x){x.setAttribute("aria-pressed",x==b)});drawSrc(d.sg)}
+else if(d.k)ans(d.k,+d.i,+d.a);
+else if(d.rs)chainUI();
+else if(b.classList.contains("chip"))chip(b);
+else if(d.v)vsel(d.v,+d.o)});
+</script>
+</body>
+</html>
